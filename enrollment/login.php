@@ -6,19 +6,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Validate input to prevent SQL injection (not shown here for brevity)
+    if (isset($_POST['login'])) {
+        $sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
+        $result = $conn->query($sql);
 
-    $sql = "SELECT * FROM User WHERE user_name = '$username' AND password = '$password'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows == 1) {
-        // Login successful
-        $_SESSION['username'] = $username;
-        header("Location: menu.php");
-        exit();
-    } else {
-        // Login failed
-        $error_message = "Invalid username or password";
+        if ($result->num_rows == 1) {
+            $_SESSION['username'] = $username;
+            header("Location: menu.php");
+            exit();
+        } else {
+            // Login failed
+            $error_message = "Invalid username or password";
+        }
+    } elseif (isset($_POST['register'])) {
+        $sql = "insert into user_table values('$username','hatdog','$password')";
+        $result = $conn->query($sql);
+	$sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
+        $result = $conn->query($sql);
+        if ($result->num_rows == 1) {
+            $_SESSION['username'] = $username;
+            header("Location: menu.php");
+            exit();
+        } else {
+            // Login failed
+            $error_message = "Invalid username or password";
+        }
+        echo "Register button clicked";
     }
 }
 ?>
@@ -37,8 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label>Password:</label><br>
         <input type="password" name="password" required><br><br>
         
-        <input type="submit" value="Register">
-	<input type="submit" value="Login">
+        <!-- Two submit buttons with different values -->
+        <input type="submit" name="register" value="Register">
+        <input type="submit" name="login" value="Login">
     </form>
 
     <?php

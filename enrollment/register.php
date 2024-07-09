@@ -5,9 +5,12 @@ require_once('db.php');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
+    $fullname = $_POST['fullname'] ?? '';
 
-    if (isset($_POST['login'])) {
-        $sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
+    if (isset($_POST['register'])) {
+        $sql = "insert into user_table values('$username','$fullname','$password')";
+        $result = $conn->query($sql);
+	$sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
         $result = $conn->query($sql);
 
         if ($result->num_rows == 1) {
@@ -15,11 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: menu.php");
             exit();
         } else {
-            // Login failed
             $error_message = "Invalid username or password";
         }
-    } elseif (isset($_POST['register'])) {
-        header("Location: register.php");
+    } elseif (isset($_POST['login'])) {
+        header("Location: login.php");
         exit();
     }
 }
@@ -30,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -123,16 +125,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Register</h2>
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username">
-            
+
+	    <label for="fullname">Fullname:</label>
+            <input type="text" id="fullname" name="fullname">
+
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
             
-            <input type="submit" name="login" value="Login">
             <input type="submit" name="register" value="Register">
+            <input type="submit" name="login" value="Login">
         </form>
     </div>
 

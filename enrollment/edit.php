@@ -90,8 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_name'])) {
     $user_name = $_POST['user_name'];
     $full_name = $_POST['full_name'];
     $password = $_POST['password'];
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-    $sql = "UPDATE user_table SET full_name = '$full_name', password = '$password' WHERE user_name = '$user_name'";
+    $sql = "UPDATE user_table SET full_name = '$full_name', password = '$hashed_password' WHERE user_name = '$user_name'";
 
     if ($conn->query($sql) === TRUE) {
         header("Location: users.php");

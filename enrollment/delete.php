@@ -33,4 +33,17 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['course_number'])) {
         echo "Error deleting record: " . $conn->error;
     }
 }
+
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['user_name'])) {
+    $user_name = $_GET['user_name'];
+
+    $sql = "DELETE FROM user_table WHERE user_name = '$user_name'";
+
+    if ($conn->query($sql) === TRUE) {
+        header("Location: users.php");
+        exit();
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+}
 ?>

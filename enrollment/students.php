@@ -20,6 +20,9 @@ $username = $_SESSION['username'];
 $sql = "SELECT full_name FROM user_table WHERE user_name = '$username'";
 $result = $conn->query($sql);
 
+$sql2 = "SELECT * FROM student";
+$result2 = $conn->query($sql2);
+
 // Fetch the full name from the result
 if ($result && $result->num_rows > 0) {
     $row = $result->fetch_assoc();
@@ -35,13 +38,15 @@ if ($result && $result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+    <title>Students</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             display: flex;
+            justify-content: center;
+            align-items: center;
             height: 100vh;
         }
         .sidebar {
@@ -52,6 +57,10 @@ if ($result && $result->num_rows > 0) {
             flex-direction: column;
             justify-content: space-between;
             color: #fff;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
         }
         .sidebar h2 {
             text-align: left;
@@ -81,7 +90,7 @@ if ($result && $result->num_rows > 0) {
             margin-top: auto;
         }
         .logout-container form {
-            margin: 0;
+            margin-bottom: 50px;
         }
         .logout-container input {
             background-color: #ff4d4d;
@@ -93,6 +102,27 @@ if ($result && $result->num_rows > 0) {
         }
         .logout-container input:hover {
             background-color: #ff3333;
+        }
+        .container {
+            margin-left: 220px; /* Adjusted to account for sidebar width and spacing */
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -111,6 +141,38 @@ if ($result && $result->num_rows > 0) {
                 <input type="submit" name="logout" value="Logout">
             </form>
         </div>
+    </div>
+
+    <div class="container">
+        <h1>Students</h1>
+        <table>
+            <tr>
+                <th>Student Code</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Programme</th>
+                <th>Actions</th>
+            </tr>
+            <?php
+            if ($result2->num_rows > 0) {
+                while($row = $result2->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>".$row["student_code"]."</td>";
+                    echo "<td>".$row["first_name"]."</td>";
+                    echo "<td>".$row["last_name"]."</td>";
+                    echo "<td>".$row["programme"]."</td>";
+                    echo "<td>
+                            <a href='edit_student.php?id=".$row["id"]."'>Edit</a> | 
+                            <a href='delete_student.php?id=".$row["id"]."' onclick='return confirm(\"Are you sure you want to delete this student?\");'>Delete</a>
+                          </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='5'>0 results</td></tr>";
+            }
+            ?>
+        </table>
+        <p><a href="add_student.php">Add New Student</a></p>
     </div>
 </body>
 </html>

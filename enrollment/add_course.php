@@ -3,35 +3,32 @@ session_start();
 require_once('db.php');
 include_once('sess.php');
 
-$student_code = $first_name = $last_name = $programme = '';
+$course_number = $course_description = $units = '';
 $errors = [];
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $student_code = htmlspecialchars($_POST['student_code']);
-    $first_name = htmlspecialchars($_POST['first_name']);
-    $last_name = htmlspecialchars($_POST['last_name']);
-    $programme = htmlspecialchars($_POST['programme']);
+    $course_number = htmlspecialchars($_POST['course_number']);
+    $course_description = htmlspecialchars($_POST['course_description']);
+    $units = htmlspecialchars($_POST['units']);
 
-    if (empty($student_code)) {
-        $errors[] = "Student Code is required";
+    // Basic validation - check if required fields are empty
+    if (empty($course_number)) {
+        $errors[] = "Course Number is required";
     }
-    if (empty($first_name)) {
-        $errors[] = "First Name is required";
+    if (empty($course_description)) {
+        $errors[] = "Course Description is required";
     }
-    if (empty($last_name)) {
+    if (empty($units)) {
         $errors[] = "Last Name is required";
-    }
-    if (empty($programme)) {
-        $errors[] = "Programme is required";
     }
 
     if (empty($errors)) {
-        $sql_insert = "INSERT INTO student (student_code, first_name, last_name, programme) 
-                       VALUES ('$student_code', '$first_name', '$last_name', '$programme')";
+        $sql_insert = "INSERT INTO course (course_number, course_description, units) 
+                       VALUES ('$course_number', '$course_description', '$units')";
 
         if ($conn->query($sql_insert) === TRUE) {
-            header("Location: students.php");
+            header("Location: courses.php");
             exit();
         } else {
             $errors[] = "Error: " . $sql_insert . "<br>" . $conn->error;
@@ -45,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Student</title>
+    <title>Add Course</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -65,26 +62,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <div class="container">
-        <h2>Add New Student</h2>
+        <h2>Add New Course</h2>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <div class="form-group">
-                <label for="student_code">Student Code:</label>
-                <input type="text" id="student_code" name="student_code" value="<?php echo $student_code; ?>" required>
+                <label for="course_number">Course Number:</label>
+                <input type="text" id="course_number" name="course_number" value="<?php echo $course_number; ?>" required>
             </div>
             <div class="form-group">
-                <label for="first_name">First Name:</label>
-                <input type="text" id="first_name" name="first_name" value="<?php echo $first_name; ?>" required>
+                <label for="course_description">Course Description:</label>
+                <input type="text" id="course_description" name="course_description" value="<?php echo $course_description; ?>" required>
             </div>
             <div class="form-group">
-                <label for="last_name">Last Name:</label>
-                <input type="text" id="last_name" name="last_name" value="<?php echo $last_name; ?>" required>
+                <label for="units">Units:</label>
+                <input type="text" id="units" name="units" value="<?php echo $units; ?>" required>
             </div>
             <div class="form-group">
-                <label for="programme">Programme:</label>
-                <input type="text" id="programme" name="programme" value="<?php echo $programme; ?>" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add Student">
+                <input type="submit" value="Add Course">
             </div>
         </form>
         <?php
@@ -97,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo '</ul></div>';
         }
         ?>
-        <a href="students.php" class="btn-back">Back to Students</a>
+        <a href="courses.php" class="btn-back">Back to Courses</a>
     </div>
 </body>
 </html>

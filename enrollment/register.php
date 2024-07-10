@@ -2,25 +2,38 @@
 session_start();
 require_once('db.php');
 
+$user_name = $fullname = $password = '';
+$errors = [];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $fullname = $_POST['fullname'] ?? '';
+    $user_name = htmlspecialchars($_POST['user_name']);
+    $fullname = htmlspecialchars($_POST['fullname']);
+    $password = htmlspecialchars($_POST['password']);
 
-    if (isset($_POST['register'])) {
-        $sql = "insert into user_table values('$username','$fullname','$password')";
-        $result = $conn->query($sql);
-	$sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
-        $result = $conn->query($sql);
+    if (empty($user_name)) {
+        $errors[] = "User Name is required";
+    }
+    if (empty($fullname)) {
+        $errors[] = "Full Name is required";
+    }
+    if (empty($password)) {
+        $errors[] = "Password is required";
+    }
 
-        if ($result->num_rows == 1) {
-            $_SESSION['username'] = $username;
+    if (empty($errors)) {
+        // Hash the password using PHP's password_hash() function
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+        $sql_insert = "INSERT INTO user_table (user_name, full_name, password) 
+                       VALUES ('$user_name', '$fullname', '$hashed_password')";
+
+        if ($conn->query($sql_insert) === TRUE) {
             header("Location: menu.php");
             exit();
         } else {
-            $error_message = "Invalid username or password";
+            $errors[] = "Error: " . $sql_insert . "<br>" . $conn->error;
         }
-    } elseif (isset($_POST['login'])) {
+    }
+    elseif (isset($_POST['login'])) {
         header("Location: login.php");
         exit();
     }
@@ -127,8 +140,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
         <h2>Register</h2>
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+            <label for="user_name">User Name:</label>
+            <input type="text" id="user_name" name="user_name">
 
 	    <label for="fullname">Fullname:</label>
             <input type="text" id="fullname" name="fullname">

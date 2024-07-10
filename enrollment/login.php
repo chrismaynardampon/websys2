@@ -7,15 +7,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'] ?? '';
 
     if (isset($_POST['login'])) {
-        $sql = "SELECT * FROM user_table WHERE user_name = '$username' AND password = '$password'";
+
+        $sql = "SELECT password FROM user_table WHERE user_name = '$username'";
         $result = $conn->query($sql);
 
         if ($result->num_rows == 1) {
-            $_SESSION['username'] = $username;
-            header("Location: menu.php");
-            exit();
+            $row = $result->fetch_assoc();
+            $hashed_password = $row['password'];
+
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['username'] = $username;
+                header("Location: menu.php");
+                exit();
+            } else {
+                $error_message = "Invalid username or password";
+            }
         } else {
-            // Login failed
             $error_message = "Invalid username or password";
         }
     } elseif (isset($_POST['register'])) {

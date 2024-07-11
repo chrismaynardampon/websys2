@@ -2,6 +2,11 @@
 session_start();
 require_once('db.php');
 include_once('sess.php');
+
+$sql_stud = "SELECT * FROM student";
+$result_stud = $conn->query($sql_stud);
+$sql_course = "SELECT * FROM course";
+$result_course = $conn->query($sql_course);
 ?>
 
 <!DOCTYPE html>
@@ -9,8 +14,14 @@ include_once('sess.php');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
+    <title>Students</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .container2 {
+            margin-left: 220px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -27,6 +38,66 @@ include_once('sess.php');
                 <input type="submit" name="logout" value="Logout">
             </form>
         </div>
+    </div>
+<div>
+    <div class="container2">
+        <h1>Students</h1>
+        <table>
+            <tr>
+                <th>Student Code</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Programme</th>
+                <th>Actions</th>
+            </tr>
+            <?php
+            if ($result_stud->num_rows > 0) {
+                while($row = $result_stud->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>".$row["student_code"]."</td>";
+                    echo "<td>".$row["first_name"]."</td>";
+                    echo "<td>".$row["last_name"]."</td>";
+                    echo "<td>".$row["programme"]."</td>";
+                    echo "<td>
+                           <input type='radio' name='selected_student' value='".$row["student_code"]."'>
+                          </td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='5'>0 results</td></tr>";
+            }
+            ?>
+        </table>
+    </div>
+
+    <div class="container2">
+        <h1>Courses</h1>
+        <table>
+            <tr>
+                <th>Course Number</th>
+                <th>Course Description</th>
+                <th>Units</th>
+                <th>Actions</th>
+            </tr>
+            <?php
+                if ($result_course->num_rows > 0) {
+                    while($row = $result_course->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>".$row["course_number"]."</td>";
+                        echo "<td>".$row["course_description"]."</td>";
+                        echo "<td>".$row["units"]."</td>";
+                        echo "<td>
+                                <input type='radio' name='selected_course' value='".$row["course_number"]."'>
+                            </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>0 results</td></tr>";
+                }
+            ?>
+
+        </table>
+    </div>
     </div>
 </body>
 </html>

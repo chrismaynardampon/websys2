@@ -68,6 +68,7 @@ $result = $conn->query($sql);
             ?>
         </table>
         <p><a href="add_student.php" class="btn-addStud">Add New Student</a></p>
+        <p><a href="enroll.php" class="btn-addStud">Add Course to Student</a></p>
     </div>
 </body>
 </html>

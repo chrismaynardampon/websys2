@@ -11,9 +11,7 @@ if (!isset($_SESSION['username'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['student_code'])) {
     $student_code = $_GET['student_code'];
-
-    $sql = "SELECT * FROM student WHERE student_code = '$student_code'";
-    $result = $conn->query($sql);
+    $result = $conn->query("SELECT * FROM student WHERE student_code = '$student_code'");
 
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();

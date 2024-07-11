@@ -3,18 +3,29 @@ session_start();
 require_once('db.php');
 include('operations.php');
 
+function getInitials($fullName) {
+    $initials = '';
+    $words = explode(' ', $fullName);
+    foreach ($words as $word) {
+        if (strlen($word) > 0) {
+            $initials .= strtolower($word[0]);
+        }
+    }
+    return $initials;
+}
+
 $student_code = $first_name = $last_name = $programme = '';
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $student_code = htmlspecialchars($_POST['student_code']);
     $first_name = htmlspecialchars($_POST['first_name']);
     $last_name = htmlspecialchars($_POST['last_name']);
     $programme = htmlspecialchars($_POST['programme']);
+    
+    $currentYear = date("Y");
+    $first_name_initials = getInitials($first_name);
+    $student_code = "AdDU" . $first_name_initials . $last_name . $currentYear;
 
-    if (empty($student_code)) {
-        $errors[] = "Student Code is required";
-    }
     if (empty($first_name)) {
         $errors[] = "First Name is required";
     }
@@ -66,40 +77,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
-    <div class="container">
-        <h2>Add New Student</h2>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <div class="form-group">
-                <label for="student_code">Student Code:</label>
-                <input type="text" id="student_code" name="student_code" value="<?php echo $student_code; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="first_name">First Name:</label>
-                <input type="text" id="first_name" name="first_name" value="<?php echo $first_name; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="last_name">Last Name:</label>
-                <input type="text" id="last_name" name="last_name" value="<?php echo $last_name; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="programme">Programme:</label>
-                <input type="text" id="programme" name="programme" value="<?php echo $programme; ?>" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Add Student">
-            </div>
-        </form>
-        <?php
+    <div class="forms-container add-stud">
+        <div class="container">
+            <h2>New Student</h2>
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="<?php echo $first_name; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="<?php echo $last_name; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="programme">Programme:</label>
+                    <input type="text" id="programme" name="programme" value="<?php echo $programme; ?>" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Add Student">
+                </div>
+            </form>
+            <?php
 
-        if (!empty($errors)) {
-            echo '<div class="error-message"><ul>';
-            foreach ($errors as $error) {
-                echo '<li>' . $error . '</li>';
+            if (!empty($errors)) {
+                echo '<div class="error-message"><ul>';
+                foreach ($errors as $error) {
+                    echo '<li>' . $error . '</li>';
+                }
+                echo '</ul></div>';
             }
-            echo '</ul></div>';
-        }
-        ?>
-        <a href="students.php" class="btn-back">Back to Students</a>
+            ?>
+            <a href="students.php" class="btn-back">Back to Students</a>
+        </div>
     </div>
 </body>
 </html>

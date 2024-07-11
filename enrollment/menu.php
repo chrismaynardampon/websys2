@@ -4,6 +4,19 @@ require('db.php');
 include('operations.php');
 
 $current_page = "menu";
+//enroll delete
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['stud_code']) && isset($_GET['course_num'])) {
+    $stud_code = $_GET['stud_code'];
+    $course_num = $_GET['course_num'];
+
+    $sql = "DELETE FROM student_courses WHERE student_code = '$stud_code' and course_number = '$course_num'";
+    if ($conn->query($sql) === TRUE) {
+        header("Location: menu.php");
+        exit();
+    } else {
+        echo "Error deleting record: " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +109,7 @@ $current_page = "menu";
             <p><a href="add_course.php" class="btn-addStud">Add New Course</a></p>
         </div>
         <div class="container2">
-            <h1>Enroll</h1>
+            <h1>Enrollments</h1>
             <table>
                 <tr>
                     <th>Student Code</th>
@@ -107,11 +120,10 @@ $current_page = "menu";
                     if ($result_enroll->num_rows > 0) {
                         while($row = $result_enroll->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>".$row["student_code"]."</td>";
-                            echo "<td>".$row["course_number"]."</td>";
-                            echo "<td><input type='radio' name='selected_enroll' value='".$row["student_code"]."'></td>";
+                            echo "<td>".htmlspecialchars($row["student_code"])."</td>";
+                            echo "<td>".htmlspecialchars($row["course_number"])."</td>";
                             echo "<td>
-                                <a class='btn-delete' href='delete.php?student_code=".$row["student_code"]."&course_number=".$row["course_number"]."&current_page=".$current_page."' onclick='return confirm(\"Are you sure you want to drop this enrollment?\");'>Drop</a>
+                                <a class='btn-delete' href='enroll.php?stud_code=".htmlspecialchars($row["student_code"])."&course_num=".htmlspecialchars($row["course_number"])."&current_page=".htmlspecialchars($current_page)."' onclick='return confirm(\"Are you sure you want to drop this enrollment?\");'>Drop</a>
                                 </td>";
                             echo "</tr>";
                         }
@@ -119,8 +131,8 @@ $current_page = "menu";
                         echo "<tr><td colspan='3'>0 results</td></tr>";
                     }
                 ?>
-                </table>
-                <p><a href="enroll_stud.php" class="btn-addStud">Enroll Student</a></p>
+            </table>
+                <p><a href="enroll.php" class="btn-addStud">Enroll Student</a></p>
         </div>
         <div class="container2"></div>
     </div>

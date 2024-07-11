@@ -1,5 +1,5 @@
 <?php
-require_once('db.php');
+require('db.php');
 
 // Check if user is logged in
 if (!isset($_SESSION['username'])) {
@@ -21,13 +21,27 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['student_code'])) {
     }
 }
 
+function getInitials($fullName) {
+    $initials = '';
+    $words = explode(' ', $fullName);
+    foreach ($words as $word) {
+        if (strlen($word) > 0) {
+            $initials .= strtolower($word[0]);
+        }
+    }
+    return $initials;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['student_code'])) {
-    $student_code = $_POST['student_code'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $programme = $_POST['programme'];
 
-    $sql = "UPDATE student SET first_name = '$first_name', last_name = '$last_name', programme = '$programme' WHERE student_code = '$student_code'";
+    $currentYear = date("Y");
+    $first_name_initials = getInitials($first_name);
+    $student_code = "AdDU" . $first_name_initials . $last_name . $currentYear;
+
+    $sql = "UPDATE student SET student_code = '$student_code', first_name = '$first_name', last_name = '$last_name', programme = '$programme' WHERE student_code = '".$_POST['student_code']."'";
 
     if ($conn->query($sql) === TRUE) {
         header("Location: students.php");

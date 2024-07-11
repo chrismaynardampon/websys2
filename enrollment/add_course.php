@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('db.php');
-include_once('sess.php');
+include_once('operations.php');
 
 $course_number = $course_description = $units = '';
 $errors = [];
@@ -46,10 +46,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="sidebar">
+    <div class="topbar">
         <div>
-            <h2><?php echo $full_name; ?></h2>
+            <h2><a href="menu.php"><?php echo $full_name; ?></a></h2>
+        </div>
+        <div>
             <ul>
+                <li><a href="enroll.php">Enroll</a></li>
                 <li><a href="students.php">Students</a></li>
                 <li><a href="courses.php">Courses</a></li>
                 <li><a href="users.php">Users</a></li>
@@ -61,8 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
+    <div class="forms-container">
     <div class="container">
-        <h2>Add New Course</h2>
+        <h2>New Course</h2>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <div class="form-group">
                 <label for="course_number">Course Number:</label>
@@ -91,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         ?>
         <a href="courses.php" class="btn-back">Back to Courses</a>
+    </div>
     </div>
 </body>
 </html>

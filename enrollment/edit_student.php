@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once('db.php');
-include_once('sess.php');
-include_once('edit.php');
+require('db.php');
+include('operations.php');
+include('edit.php');
 ?>
 
 <!DOCTYPE html>
@@ -14,10 +14,13 @@ include_once('edit.php');
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="sidebar">
+    <div class="topbar">
         <div>
-            <h2><?php echo $full_name; ?></h2>
+            <h2><a href="menu.php"><?php echo $full_name; ?></a></h2>
+        </div>
+        <div>
             <ul>
+                <li><a href="enroll.php">Enroll</a></li>
                 <li><a href="students.php">Students</a></li>
                 <li><a href="courses.php">Courses</a></li>
                 <li><a href="users.php">Users</a></li>
@@ -29,6 +32,7 @@ include_once('edit.php');
             </form>
         </div>
     </div>
+    <div class="forms-container">
     <div class="container">
         <h2>Edit Student</h2>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
@@ -63,6 +67,6 @@ include_once('edit.php');
         ?>
         <a href="students.php" class="btn-back">Back to Students</a>
     </div>
-    
+    </div>
 </body>
 </html>

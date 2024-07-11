@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('db.php');
-include_once('sess.php');
+include_once('operations.php');
 
 $user_name = $fullname = $password = '';
 $errors = [];
@@ -22,9 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($errors)) {
-        // Hash the password using PHP's password_hash() function
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $sql_insert = "INSERT INTO user_table (user_name, full_name, password) 
+        $sql_insert = "INSERT INTO user_table (user_name, full_name, password)
                        VALUES ('$user_name', '$fullname', '$hashed_password')";
 
         if ($conn->query($sql_insert) === TRUE) {
@@ -46,10 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="sidebar">
+    <div class="topbar">
         <div>
-            <h2><?php echo $full_name; ?></h2>
+            <h2><a href="menu.php"><?php echo $full_name; ?></a></h2>
+        </div>
+        <div>
             <ul>
+                <li><a href="enroll.php">Enroll</a></li>
                 <li><a href="students.php">Students</a></li>
                 <li><a href="courses.php">Courses</a></li>
                 <li><a href="users.php">Users</a></li>
@@ -61,8 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
     </div>
+    <div class="forms-container">
     <div class="container">
-        <h2>Add New User</h2>
+        <h2>New User</h2>
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <div class="form-group">
                 <label for="user_name">User Name:</label>
@@ -91,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         ?>
         <a href="users.php" class="btn-back">Back to Users</a>
+    </div>
     </div>
 </body>
 </html>

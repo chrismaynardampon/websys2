@@ -11,12 +11,6 @@ include('operations.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Students</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .container2 {
-            margin-left: 220px;
-            padding: 20px;
-        }
-    </style>
 </head>
 <body>
     <div class="topbar">
@@ -37,7 +31,7 @@ include('operations.php');
             </form>
         </div>
     </div>
-
+<div class="forms-container">
     <div class="container2">
         <h1>Students</h1>
         <table>
@@ -68,7 +62,7 @@ include('operations.php');
             ?>
         </table>
         <p><a href="add_student.php" class="btn-addStud">Add New Student</a></p>
-        <p><a href="enroll.php" class="btn-addStud">Add Course to Student</a></p>
+    </div>
     </div>
 </body>
 </html>

@@ -21,9 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($errors)) {
-        // Hash the password using PHP's password_hash() function
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-        $sql_insert = "INSERT INTO user_table (user_name, full_name, password) 
+        $sql_insert = "INSERT INTO user_table (user_name, full_name, password)
                        VALUES ('$user_name', '$fullname', '$hashed_password')";
 
         if ($conn->query($sql_insert) === TRUE) {
